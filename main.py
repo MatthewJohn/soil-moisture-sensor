@@ -72,8 +72,14 @@ class Threshold:
 
 def check_sensor(sensor, thresholds):
     print("Checking sensor")
-    val = sensor.read_u16()
-    print("Got value: ", val)
+    sum_val = 0
+    for _ in range(3):
+        val = sensor.read_u16()
+        print("Read value: ", val)
+        sum_val += val
+        time.sleep(0.5)
+    val = sum_val / 3
+    print("Got average value: ", val)
     for threshold in thresholds:
         if threshold.compare(val):
             print("Breaching threshold")
