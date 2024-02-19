@@ -1,0 +1,5 @@
+{
+  "wifi_ssid": "SSID HERE",
+  "wifi_password": "wifi pass",
+  "discord_webhook": "https://discord.com/api/webhooks/12345"
+}
