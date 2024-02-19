@@ -70,11 +70,11 @@ class Threshold:
             self._last_notification = time.ticks_ms()
 
 
-def check_sensor(sensor, thresholds, value_conversion=lambda x: x):
+def check_sensor(sensor, thresholds):
     print("Checking sensor")
     sum_val = 0
     for _ in range(3):
-        val = value_conversion(sensor.read_u16())
+        val = sensor.read_u16()
         print("Read value: ", val)
         sum_val += val
         time.sleep(0.5)
@@ -87,9 +87,9 @@ def check_sensor(sensor, thresholds, value_conversion=lambda x: x):
             break
 
 
-water_adc = machine.ADC(26)
+adc = machine.ADC(26)
 
-water_thresholds = [
+thresholds = [
     Threshold(label="Plant soil at critical dryness",
               compare=lambda x: x >= 14000,
               interval_mins=120),
@@ -98,20 +98,7 @@ water_thresholds = [
               interval_mins=12*60),
 ]
 
-def convert_temp(value):
-    return 27 - ((value * (3.3 / 65535)) - 0.706)/0.001721
-
-temp_thresholds = [
-    Threshold(label='Temp too hot',
-              compare=lambda x: x > 18,
-              interval_mins=60)
-]
-
-temp_adc = machine.ADC(4)
-
-
 while True:
-    check_sensor(water_adc, water_thresholds)
-    check_sensor(temp_adc, temp_thresholds, value_conversion=convert_temp)
+    check_sensor(adc, thresholds)
     time.sleep(60)
 
